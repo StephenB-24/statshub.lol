@@ -1,34 +1,34 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
+type Site = {
+  name: string
+  url: string
+}
+
+const sites: Site[] = [
+  { name: 'u.gg', url: 'https://u.gg' },
+  { name: 'deeplol.gg', url: 'https://deeplol.gg' },
+  { name: 'op.gg', url: 'https://www.op.gg' },
+]
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentUrl, setCurrentUrl] = useState(sites[0].url)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="app-container">
+      <header className="app-bar">
+        <div className="brand">📊 statshub.lol</div>
+        <nav className="nav-buttons">
+          {sites.map((site) => (
+            <button key={site.url} onClick={() => setCurrentUrl(site.url)}>
+              {site.name}
+            </button>
+          ))}
+        </nav>
+      </header>
+      <iframe title="stats-site" src={currentUrl} className="site-frame" />
+    </div>
   )
 }
 
