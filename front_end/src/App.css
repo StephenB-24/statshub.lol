@@ -1,29 +1,18 @@
-.app-container {
+.button-grid {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
   height: 100%;
+  flex: 1;
+  gap: 1rem;
+  padding: 2rem;
 }
 
-.app-bar {
-  display: flex;
-  align-items: center;
-  padding: 0 1rem;
-  background-color: #20232a;
-  color: #ffffff;
-}
-
-.brand {
-  font-weight: bold;
-  margin-right: 1rem;
-}
-
-.nav-buttons button {
-  margin-right: 0.5rem;
-  padding: 0.5rem 1rem;
-}
-
-.site-frame {
-  flex-grow: 1;
+.site-button {
+  display: block;
   width: 100%;
-  border: none;
+  font-size: 2rem;
+  padding: 2rem;
+  text-align: center;
 }
