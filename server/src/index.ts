@@ -12,7 +12,7 @@ app.use(cors());
 
 // Dynamic proxy route: /proxy/:host/<path>
 app.use('/proxy/:host', (req: Request, res: Response, next: NextFunction) => {
-  const host = req.params.host;
+  const host = (req as any).params.host as string;
   const proxy = createProxyMiddleware({
     target: `https://${host}`,
     changeOrigin: true,
@@ -25,17 +25,21 @@ app.use('/proxy/:host', (req: Request, res: Response, next: NextFunction) => {
         delete proxyRes.headers['content-security-policy'];
       }
       if (proxyRes.headers['x-frame-options']) {
-        delete proxyRes.headers['x-frame-options'];
+        proxyRes.headers['x-frame-options'] = 'ALLOWALL';
       }
       // Rewrite redirect locations to continue through the proxy
       const location = proxyRes.headers['location'];
       if (location) {
-        const redirectUrl = new URL(location.toString());
-        proxyRes.headers['location'] = `/proxy/${redirectUrl.host}${redirectUrl.pathname}${redirectUrl.search}${redirectUrl.hash}`;
+        try {
+          const redirectUrl = new URL(location.toString(), `https://${host}`);
+          proxyRes.headers['location'] = `/proxy/${redirectUrl.host}${redirectUrl.pathname}${redirectUrl.search}${redirectUrl.hash}`;
+        } catch (err) {
+          console.error('Failed to rewrite redirect location', location, err);
+        }
       }
     },
-  });
-  return proxy(req, res, next);
+  } as any);
+  return (proxy as any)(req, res, next);
 });
 
 app.listen(PORT, () => {
